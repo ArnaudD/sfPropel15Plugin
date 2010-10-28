@@ -37,31 +37,32 @@ class sfWidgetFormSchemaOptional extends sfWidgetFormSchemaDecoratorEscaped
   protected function getDecorator($name)
   {
     $strippedName = substr($name, strrpos($name, '[') + 1, strrpos($name, ']') - strrpos($name, '[') - 1);
+    $widgetId = $this->generateId ($name);
     $decorator = $this->escape($this->decorator);
     $decorator = "
 <script type=\"text/javascript\">
-var added{$strippedName} = 0;
-function add{$strippedName}Widget()
+var added{$widgetId} = 0;
+function add{$widgetId}Widget()
 {
-  added{$strippedName} += 1;
+  added{$widgetId} += 1;
   var content = \"{$decorator}\";
   var spanTag = document.createElement(\"span\");
-  spanTag.innerHTML = content.replace(/([_\[]){$strippedName}([_\]])/g, '\$1{$strippedName}' +  + added{$strippedName} + '\$2');
-  document.getElementById('add_{$strippedName}').appendChild(spanTag);
-  document.getElementById('add_{$strippedName}').style.display='block';";
+  spanTag.innerHTML = content.replace(/([_\[]){$strippedName}([_\]])/g, '\$1{$strippedName}' +  + added{$widgetId} + '\$2');
+  document.getElementById('add_{$widgetId}').appendChild(spanTag);
+  document.getElementById('add_{$widgetId}').style.display='block';";
     if ($this->getOption('max_additions') > 0) {
         $decorator .= "
-  if (added{$strippedName} == {$this->getOption('max_additions')})
+  if (added{$widgetId} == {$this->getOption('max_additions')})
   {
-    document.getElementById('add_{$strippedName}_link').style.display='none';
+    document.getElementById('add_{$widgetId}_link').style.display='none';
   }";
     }
   $decorator .= "
 }
 </script>
-<div id=\"add_{$strippedName}\" style=\"display:none\">
+<div id=\"add_{$widgetId}\" style=\"display:none\">
 </div>
-<a href=\"#\" id = \"add_{$strippedName}_link\" onclick=\"add{$strippedName}Widget();return false;\">
+<a href=\"#\" id = \"add_{$widgetId}_link\" onclick=\"add{$widgetId}Widget();return false;\">
   {$this->getOption('add_link')}
 </a>";
       
